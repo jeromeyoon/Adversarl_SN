@@ -57,7 +57,7 @@ def conv_cond_concat(x, y):
     return tf.concat(3, [x, y*tf.ones([x_shapes[0], x_shapes[1], x_shapes[2], y_shapes[3]])])
 
 def conv2d(input_, output_dim,
-           k_h=5, k_w=5, d_h=1, d_w=1, stddev=0.02,padding='SAME',
+           k_h=3, k_w=3, d_h=1, d_w=1, stddev=0.02,padding='SAME',
            name="conv2d"):
     with tf.variable_scope(name):
         w = tf.get_variable('w', [k_h, k_w, input_.get_shape()[-1], output_dim],
@@ -89,6 +89,13 @@ def deconv2d(input_, output_shape,
             return deconv, w, biases
         else:
             return deconv
+
+
+
+def maxpool(x,k_h=3,k_w=3,d_h=2,d_w=2,padding='VALID',name='pool'):
+    with tf.variavle_scope(name):
+        return tf.nn.max_pool(x,[1,k_h,k_w,1],[1,d_h,d_w,1])	  
+
 
 def lrelu(x, leak=0.2, name="lrelu"):
     with tf.variable_scope(name):

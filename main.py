@@ -3,10 +3,10 @@ import os
 import tensorflow as tf
 import random,time,json,pdb,scipy.misc,glob
 from model_queue import DCGAN
-#from test import EVAL
+from test import EVAL
 from utils import pp, save_images, to_json, make_gif, merge, imread, get_image
 from numpy import inf
-#from sorting import natsorted
+from sorting import natsorted
 import matplotlib.image as mpimg
 flags = tf.app.flags
 flags.DEFINE_integer("epoch", 1000, "Epoch to train [25]")
@@ -41,7 +41,7 @@ def main(_):
             dcgan = DCGAN(sess, image_size=FLAGS.image_size, batch_size=FLAGS.batch_size,\
 	    dataset_name=FLAGS.dataset,is_crop=FLAGS.is_crop, checkpoint_dir=FLAGS.checkpoint_dir)
         else:
-	    dcgan = EVAL(sess, batch_size=1,num_block=FLAGS.num_block,ir_image_shape=[600,800,1],normal_image_shape=[600,800,3],dataset_name=FLAGS.dataset,\
+	    dcgan = EVAL(sess, batch_size=1,ir_image_shape=[600,800,1],dataset_name=FLAGS.dataset,\
                       is_crop=False, checkpoint_dir=FLAGS.checkpoint_dir)
 	    print('deep model test \n')
 
@@ -129,7 +129,7 @@ def main(_):
 			        mean_mask = mean_nir * mask
 			        #input_ = input_ - mean_mask	
 			        start_time = time.time() 
-			        sample  = sess.run(dcgan.G, feed_dict={dcgan.ir_images: input_,dcgan.noise:noise})
+			        sample  = sess.run(dcgan.G, feed_dict={dcgan.ir_images: input_})
 			        #sample = sess.run(dcgan.sampler, feed_dict={dcgan.ir_images: input_})
 			        print('time: %.8f' %(time.time()-start_time))     
 			        # normalization #

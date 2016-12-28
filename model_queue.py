@@ -25,7 +25,6 @@ class DCGAN(object):
         self.ir_image_shape = ir_image_shape
         self.df_dim = df_dim
         self.dataset_name = dataset_name
-	self.num_block = num_block
         self.checkpoint_dir = checkpoint_dir
 	self.use_queue = True
 	self.mean_nir = -0.3313 #-1~1
