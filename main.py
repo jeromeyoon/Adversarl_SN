@@ -41,7 +41,7 @@ def main(_):
             dcgan = DCGAN(sess, image_size=FLAGS.image_size, batch_size=FLAGS.batch_size,\
 	    dataset_name=FLAGS.dataset,is_crop=FLAGS.is_crop, checkpoint_dir=FLAGS.checkpoint_dir)
         else:
-	    dcgan = EVAL(sess, batch_size=1,ir_image_shape=[600,800,1],dataset_name=FLAGS.dataset,\
+	    dcgan = EVAL(sess, batch_size=1,ir_image_shape=[256,256,1],dataset_name=FLAGS.dataset,\
                       is_crop=False, checkpoint_dir=FLAGS.checkpoint_dir)
 	    print('deep model test \n')
 
@@ -113,18 +113,18 @@ def main(_):
 		        for idx2 in range(1,10): #tilt angles 1~9 
 		            for idx3 in range(5,7): # light source 
 			        print("Selected material %03d/%d" % (list_val[idx],idx2))
-			        img = '/research2/IR_normal_small/save%03d/%d' % (list_val[idx],idx2)
-				noise = np.random.rand(1,600,800,1)
+			        img = '/research2/ECCV_dataset_resized/save%03d/%d' % (list_val[idx],idx2)
+				noise = np.random.rand(1,256,256,1)
 				#noise = np.random.uniform(-1,1,size=(1,600,800,1))
 			        input_ = scipy.misc.imread(img+'/%d.bmp' %idx3).astype(float) #input NIR image
-			        input_ = scipy.misc.imresize(input_,[600,800])
+			        input_ = scipy.misc.imresize(input_,[256,256])
 			        input_  = input_/127.5 -1.0 # normalize -1 ~1
-			        input_ = np.reshape(input_,(1,600,800,1)) 
+			        input_ = np.reshape(input_,(1,256,256,1)) 
 			        input_ = np.array(input_).astype(np.float32)
 			        gt_ = scipy.misc.imread(img+'/12_Normal.bmp').astype(float)
 			        gt_ = np.sum(gt_,axis=2)
-			        gt_ = scipy.misc.imresize(gt_,[600,800])
-			        gt_ = np.reshape(gt_,[1,600,800,1])
+			        gt_ = scipy.misc.imresize(gt_,[256,256])
+			        gt_ = np.reshape(gt_,[1,256,256,1])
 			        mask =[gt_ >0.0][0]*1.0
 			        mean_mask = mean_nir * mask
 			        #input_ = input_ - mean_mask	

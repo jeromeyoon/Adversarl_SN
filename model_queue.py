@@ -33,6 +33,7 @@ class DCGAN(object):
 	self.vgg_model = 'imagenet-vgg-verydeep-19.mat'
 	self.pair = True
 	self.dis_loss =False
+	self.lambda_= 0.99
 	self.build_model()
     def build_model(self):
 
@@ -103,7 +104,8 @@ class DCGAN(object):
         global_step = tf.Variable(0,name='global_step',trainable=False)
         global_step1 = tf.Variable(0,name='global_step1',trainable=False)
 
-        g_optim = tf.train.AdamOptimizer(config.learning_rate,beta1=config.beta1) \
+	g_lr = tf.train.exponential_decay(config.learning_rate,global_step1,8000,0.5,staircase=True)
+        g_optim = tf.train.AdamOptimizer(g_lr,beta1=config.beta1) \
                           .minimize(self.gen_loss, global_step=global_step,var_list=self.g_vars)
 	if self.dis_loss:	
 	    d_optim = tf.train.AdamOptimizer(config.learning_rate,beta1=config.beta1) \
