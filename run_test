@@ -13,6 +13,6 @@ then
     echo "Dont forget insert GPU number, GPU factor and datasetname  \n"
 exit
 else
-CUDA_VISIBLE_DEVICES=$gpu python main.py --gpu $gpu_factor --dataset 1228_Adversal_vgg_1
+CUDA_VISIBLE_DEVICES=$gpu python main.py --gpu $gpu_factor --dataset 1229_Adversal_vgg_1
 fi
 

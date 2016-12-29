@@ -15,7 +15,7 @@ flags.DEFINE_float("beta1", 0.5, "Momentum term of adam [0.5]")
 flags.DEFINE_integer("train_size", np.inf, "The size of train images [np.inf]")
 flags.DEFINE_integer("batch_size", 1, "The size of batch images [64]")
 flags.DEFINE_integer("image_size", 108, "The size of image to use (will be center cropped) [108]")
-flags.DEFINE_string("dataset", "1228_Adversal_vgg", "The name of dataset [celebA, mnist, lsun]")
+flags.DEFINE_string("dataset", "1229_Adversal_vgg_224", "The name of dataset [celebA, mnist, lsun]")
 flags.DEFINE_string("checkpoint_dir", "checkpoint", "Directory name to save the checkpoints [checkpoint]")
 flags.DEFINE_string("sample_dir", "output", "Directory name to save the image samples [samples]")
 flags.DEFINE_boolean("is_train", False, "True for training, False for testing [False]")
@@ -117,7 +117,7 @@ def main(_):
 				noise = np.random.rand(1,256,256,1)
 				#noise = np.random.uniform(-1,1,size=(1,600,800,1))
 			        input_ = scipy.misc.imread(img+'/%d.bmp' %idx3).astype(float) #input NIR image
-			        input_ = scipy.misc.imresize(input_,[256,256])
+			        #input_ = scipy.misc.imresize(input_,[256,256])
 			        input_  = input_/127.5 -1.0 # normalize -1 ~1
 			        input_ = np.reshape(input_,(1,256,256,1)) 
 			        input_ = np.array(input_).astype(np.float32)
