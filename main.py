@@ -46,7 +46,6 @@ def main(_):
 	    print('deep model test \n')
 
         if FLAGS.is_train:
-	    pdb.set_trace()
             dcgan.train(FLAGS)
         else:
             list_val = [11,16,21,22,33,36,38,53,59,92]
