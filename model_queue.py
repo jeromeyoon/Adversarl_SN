@@ -84,6 +84,7 @@ class DCGAN(object):
 	if self.loss == 'L1':
             self.L_loss = tf.reduce_mean(tf.abs(tf.sub(self.G,self.normal_images)))
 	else:
+            #self.L_loss = tf.sqrt(tf.reduce_sum(tf.square(tf.sub(self.G,self.normal_images))))
             self.L_loss = tf.reduce_mean(tf.square(tf.sub(self.G,self.normal_images)))
         self.g_loss = binary_cross_entropy_with_logits(tf.ones_like(self.D_), self.D_)
 
@@ -263,7 +264,6 @@ class DCGAN(object):
 	    i = (count*num_thread + idx) % length;
 	    j = random.randint(0,len(file_list[0])-1) # select an light direction
 	    r = random.randint(0,2)
-	    pdb.set_trace()
             input_img = scipy.misc.imread(file_list[S[i]]).reshape([256,256,1]).astype(np.float32)
 	    gt_img = scipy.misc.imread(label_list[S[i]]).reshape([256,256,3]).astype(np.float32)
 	    input_img = input_img/127.5 -1.

@@ -1,5 +1,7 @@
+from collections import namedtuple
 from ops import *
 import tensorflow as tf
+
 
 class networks(object):
     def __init__(self,batch_size,df_dim):

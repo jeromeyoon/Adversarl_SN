@@ -41,7 +41,7 @@ def main(_):
             dcgan = DCGAN(sess, image_size=FLAGS.image_size, batch_size=FLAGS.batch_size,\
 	    dataset_name=FLAGS.dataset,is_crop=FLAGS.is_crop, checkpoint_dir=FLAGS.checkpoint_dir)
         else:
-	    dcgan = EVAL(sess, batch_size=1,ir_image_shape=[256,256,1],dataset_name=FLAGS.dataset,\
+	    dcgan = EVAL(sess, batch_size=1,ir_image_shape=[600,800,1],dataset_name=FLAGS.dataset,\
                       is_crop=False, checkpoint_dir=FLAGS.checkpoint_dir)
 	    print('deep model test \n')
 
@@ -57,17 +57,18 @@ def main(_):
                 print("Computing arbitary dataset ")
 		trained_models = glob.glob(os.path.join(FLAGS.checkpoint_dir,FLAGS.dataset,'DCGAN.model*'))
 		trained_models  = natsorted(trained_models)
-		datapath = '/research2/Ammonight/*.bmp'
-                savepath = '/research2/Ammonight/output'
+		datapath = 'horse.jpg'
+                savepath = 'output'
 		mean_nir = -0.3313
-		fulldatapath = os.path.join(glob.glob(datapath))
-		model = trained_models[4]
+		#fulldatapath = os.path.join(glob.glob(datapath))
+		model = trained_models[-2]
 		model = model.split('/')
 		model = model[-1]
 		dcgan.load(FLAGS.checkpoint_dir,model)
-                for idx in xrange(len(fulldatapath)):
-		    input_= scipy.misc.imread(fulldatapath[idx]).astype(float)
-	            input_ = scipy.misc.imresize(input_,[600,800])
+                for idx in xrange(1):
+		    input_= scipy.misc.imread(datapath,flatten=True).astype(float)
+		    pdb.set_trace()
+	            input_ = scipy.misc.imresize(input_,[256,256])
 	            input_  = (input_/127.5)-1. # normalize -1 ~1
                     input_ = np.reshape(input_,(1,input_.shape[0],input_.shape[1],1)) 
                     input_ = np.array(input_).astype(np.float32)
@@ -75,7 +76,7 @@ def main(_):
 		    mean_mask = mask * mean_nir
 		    #input_ = input_ - mean_mask
                     start_time = time.time() 
-                    sample = sess.run(dcgan.sampler, feed_dict={dcgan.ir_images: input_})
+                    sample = sess.run(dcgan.G, feed_dict={dcgan.ir_images: input_})
                     print('time: %.8f' %(time.time()-start_time))     
                     # normalization #
                     sample = np.squeeze(sample).astype(np.float32)
@@ -85,10 +86,10 @@ def main(_):
 		    output[output ==inf] = 0.0
 		    sample = (output+1.0)/2.0
 
-                    name = fulldatapath[idx].split('/')
-		    name = name[-1].split('.')
-                    name = name[0]
-		    savename = savepath + '/normal_' + name +'.bmp' 
+                    #name = fulldatapath[idx].split('/')
+		    #name = name[-1].split('.')
+                    #name = name[0]
+		    savename = savepath + '/normal_' + 'horse.jpg' 
                     scipy.misc.imsave(savename, sample)
 
 	    elif VAL_OPTION ==2: # depends on light sources 
@@ -112,18 +113,18 @@ def main(_):
 		        for idx2 in range(1,10): #tilt angles 1~9 
 		            for idx3 in range(5,7): # light source 
 			        print("Selected material %03d/%d" % (list_val[idx],idx2))
-			        img = '/research2/ECCV_dataset_resized/save%03d/%d' % (list_val[idx],idx2)
-				noise = np.random.rand(1,256,256,1)
+			        img = '/research2/IR_normal_small/save%03d/%d' % (list_val[idx],idx2)
+				#noise = np.random.rand(1,256,256,1)
 				#noise = np.random.uniform(-1,1,size=(1,600,800,1))
 			        input_ = scipy.misc.imread(img+'/%d.bmp' %idx3).astype(float) #input NIR image
-			        #input_ = scipy.misc.imresize(input_,[256,256])
+			        input_ = scipy.misc.imresize(input_,[600,800])
 			        input_  = input_/127.5 -1.0 # normalize -1 ~1
-			        input_ = np.reshape(input_,(1,256,256,1)) 
+			        input_ = np.reshape(input_,(1,600,800,1)) 
 			        input_ = np.array(input_).astype(np.float32)
 			        gt_ = scipy.misc.imread(img+'/12_Normal.bmp').astype(float)
 			        gt_ = np.sum(gt_,axis=2)
-			        gt_ = scipy.misc.imresize(gt_,[256,256])
-			        gt_ = np.reshape(gt_,[1,256,256,1])
+			        gt_ = scipy.misc.imresize(gt_,[600,800])
+			        gt_ = np.reshape(gt_,[1,600,800,1])
 			        mask =[gt_ >0.0][0]*1.0
 			        mean_mask = mean_nir * mask
 			        #input_ = input_ - mean_mask	
